@@ -3,14 +3,11 @@ import { createConversation, findConversationBetweenUsers, getAllConversationsFo
 
 const createConv = asyncHandler(async (req, res) => {
     const senderId = req.user.id;
-    const receiverId = req.params.id;
-    if (!receiverId) {
-        return res.status(400).json({ message: "Receiver ID is required" });
+    const receiver = req.body.phone;
+    if (!receiver) {
+        return res.status(400).json({ message: "Receiver phone is required" });
     };
-    if (senderId == receiverId) {
-        return res.status(400).json({ message: "Cannot create conversation with yourself" });
-    };
-    await createConversation(senderId, receiverId);
+    await createConversation(senderId, receiver);
     res.status(201).json({ message: "Created conversation"});
 });
 
