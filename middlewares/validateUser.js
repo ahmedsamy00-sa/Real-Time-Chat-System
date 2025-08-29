@@ -13,6 +13,8 @@ const validateCreateUser = [
     body('password')
     .isLength({ min: 6 }).withMessage('Password must be at least 6 characters')
     .matches(/\d/).withMessage('Password must contain a number'),
+    body('phone').isMobilePhone().withMessage("Invalid phone number").isLength({ min: 11, max: 11 })
+    .withMessage("Phone number must be exactly 11 characters"),
 ];
 
 const handleValidateError = (req,res,nxt)=>{

@@ -1,9 +1,9 @@
 import db from '../config/database.js';
 
-const createUser = async (name, email, hashedPassword) =>{
+const createUser = async (name, email, hashedPassword, phone) =>{
     try{
     const [result] = await db.execute(
-        'INSERT INTO users (name, email, password) VALUES (?, ?, ?)',[name, email, hashedPassword]);
+        'INSERT INTO users (name, email, password, phone) VALUES (?, ?, ?, ?)',[name, email, hashedPassword, phone]);
     return result;
     }catch(err){
         console.error('Error creating user:', err);

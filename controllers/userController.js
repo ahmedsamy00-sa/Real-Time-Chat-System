@@ -4,13 +4,13 @@ import { createUser, findUserByEmail, getAllUsers } from "../models/userModel.js
 import jwt from "jsonwebtoken";
 
 const registerOne = asyncHandler(async (req, res) => {
-    const { name, email, password } = req.body;
+    const { name, email, password, phone } = req.body;
     const existingUser = await findUserByEmail(email);
     if (existingUser) {
         return res.status(400).json({ message: "Invalid Email" });
     };
     const hashedPassword = await bcrypt.hash(password, 12);
-    const user = await createUser(name, email, hashedPassword);
+    const user = await createUser(name, email, hashedPassword, phone);
 
     const token = jwt.sign({ id: user.user_id, email: user.Email },process.env.Jwt_secret_key,{ expiresIn: '5h' });
 

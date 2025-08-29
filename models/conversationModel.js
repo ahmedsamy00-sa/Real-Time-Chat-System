@@ -1,6 +1,11 @@
 import db from "../config/database.js";
 
-const createConversation = async (user1_id, user2_id) => {
+const createConversation = async (user1_id, phone) => {
+    const [rows] = await db.execute('SELECT user_id FROM users WHERE phone = ?',[phone]);
+    if (rows.length === 0) {
+        throw new Error('User with this phone number not found');
+    }
+    let user2_id = rows[0].user_id;
     try {
         if (user1_id === user2_id) {
             throw new Error('Cannot find conversation with yourself');
@@ -50,15 +55,37 @@ const findConversationBetweenUsers = async (user1_id, name) => {
 const getAllConversationsForUser = async (user_id) => {
     try {
         const [rows] = await db.execute(
-            'SELECT * FROM conversations WHERE user1_id = ? or user2_id = ? ', [user_id, user_id]);
-            if(rows.length === 0) {
-                throw new Error('No conversations found for the user');
-            }
+            `SELECT c.conversation_id,
+                    CASE
+                    WHEN c.user1_id = ? THEN u2.name ELSE u1.name
+                    END AS other_user_name,
+                    m.message_id,
+                    m.content AS last_message,
+                    m.created_at AS last_message_time
+                FROM conversations c
+                JOIN users u1 ON u1.user_id = c.user1_id
+                JOIN users u2 ON u2.user_id = c.user2_id
+                LEFT JOIN messages m ON m.message_id = (
+                SELECT message_id 
+                FROM messages 
+                WHERE conversation_id = c.conversation_id 
+                ORDER BY created_at DESC 
+                LIMIT 1
+                )
+                WHERE c.user1_id = ? OR c.user2_id = ?
+                ORDER BY m.created_at DESC;`,
+            [user_id, user_id, user_id]
+        );
+
+        if (rows.length === 0) {
+            throw new Error('No conversations found for the user');
+        }
+
         return rows;
     } catch (err) {
         console.error('Error getting all conversations for user:', err);
         throw err;
     }
-}
+};
 
 export { createConversation, findConversationBetweenUsers, getAllConversationsForUser };
