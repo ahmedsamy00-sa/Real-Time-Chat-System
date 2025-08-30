@@ -9,6 +9,9 @@ import path from 'path';
 import cors from 'cors';
 import http from 'http';
 import { Server } from 'socket.io';
+import messageSocket from './sockets/messageSockets.js';
+
+
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -16,11 +19,22 @@ const __dirname = path.dirname(__filename);
 dotenv.config({ path: "./config.env" });
 
 const app = express();
+const port = process.env.PORT;
 
 // middlewares
 app.use(cors());
 app.use(helmet());
 app.use(express.json());
+
+const server = http.createServer(app);
+const io = new Server(server, {
+    cors: {
+        origin: '*',
+        methods: ['GET', 'POST'],
+    },
+});
+
+app.set('io', io);
 
 // mount routes
 app.use('/api/v1/users', userRoutes);
@@ -40,15 +54,8 @@ app.use((err, req, res, next) => {
     });
 });
 
-const port = process.env.PORT;
-
-const server = http.createServer(app);
-const io = new Server(server);
-io.on("connection", (Socket) =>{
-    Socket.emit("message", "Welcome to Chat system")
-})
-
-
+// WebSocket Events
+messageSocket(io);
 
 
 server.listen(port, () => {

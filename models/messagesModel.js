@@ -7,8 +7,15 @@ const addMessage = async (convId, content, imagePath, senderId) =>{
         if(result.affectedRows === 0){
             throw new Error('Failed to create message');   
         }
-        return result;
-    }catch(err){
+        return {
+            id: result.insertId,
+            conversationId: convId,
+            senderId,
+            message: content,
+            imagePath,
+            timestamp: new Date()
+        };
+        }catch(err){
         console.error('Error Sending Message:', err);
         throw err;
     }
