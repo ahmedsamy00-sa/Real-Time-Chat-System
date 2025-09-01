@@ -79,8 +79,6 @@ const getAllConversationsForUser = async (user_id) => {
                 ORDER BY last_message_time DESC;`,
             [user_id, user_id, user_id]
         );
-
-        if (rows.length === 0)  throw new Error('No conversations found for this user');
         return rows;
     } catch (err) {
         console.error('Error getting all conversations for user:', err);
