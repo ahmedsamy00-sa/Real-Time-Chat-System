@@ -36,7 +36,12 @@ const loginOne = asyncHandler(async (req, res) => {
         return res.status(400).json({ message: "Invalid Email or Password" });
     };
     const token = jwt.sign({ id: user.user_id, email: user.Email },process.env.Jwt_secret_key,{ expiresIn: '5h' });
-    res.status(200).json({ token, message: "Login successful" });
+    res.status(200).json({ token, message: "Login successful",
+        user: {
+            id: user.user_id, 
+            name: user.Name,
+            email: user.Email
+        }});
 });
 
 const getAll = asyncHandler(async(req,res) =>{
