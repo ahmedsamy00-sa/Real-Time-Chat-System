@@ -24,7 +24,8 @@ const sendMessage = asyncHandler(async (req, res) => {
 
 const getMessages = asyncHandler(async (req, res) => {
     const convId = req.params.id;
-    const messages = await getMessagesByConversationId(convId);
+    const userId = req.user.id;
+    const messages = await getMessagesByConversationId(convId, userId);
     res.status(200).json(messages);
 });
 

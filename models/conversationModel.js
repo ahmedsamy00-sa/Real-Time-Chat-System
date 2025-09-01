@@ -29,31 +29,6 @@ const createConversation = async (user1_id, phone) => {
     }
 };
 
-const findConversationBetweenUsers = async (user1_id, name) => {
-    try {
-        const [user2Row] = await db.execute('SELECT user_id FROM users WHERE name = ?', [name]);
-
-        if (user2Row.length === 0) throw new Error('User with the given name does not exist');
-
-        let user2_id = user2Row[0].user_id;
-
-        if (user1_id === user2_id) throw new Error('Cannot find conversation with yourself');
-
-        if (user1_id > user2_id) [user1_id, user2_id] = [user2_id, user1_id];
-
-        const [rows] = await db.execute(
-            'SELECT * FROM conversations WHERE (user1_id = ? AND user2_id = ?) OR (user1_id = ? AND user2_id = ?)',
-            [user1_id, user2_id, user2_id, user1_id]
-        );
-
-        if (rows.length === 0) throw new Error('Conversation between the users does not exist');
-
-        return rows[0];
-    } catch (err) {
-        console.error('Error finding conversation between users:', err);
-        throw err;
-    }
-};
 
 const getAllConversationsForUser = async (user_id) => {
     try {
@@ -86,4 +61,4 @@ const getAllConversationsForUser = async (user_id) => {
     }
 };
 
-export { createConversation, findConversationBetweenUsers, getAllConversationsForUser };
+export { createConversation, getAllConversationsForUser };
