@@ -22,15 +22,21 @@ const app = express();
 const port = process.env.PORT;
 
 // middlewares
-app.use(cors());
+app.use(cors(
+    {
+        origin: 'http://localhost:3000',
+        credentials: true
+    }
+));
 app.use(helmet());
 app.use(express.json());
 
 const server = http.createServer(app);
 const io = new Server(server, {
     cors: {
-        origin: '*',
+        origin: 'http://localhost:3000',
         methods: ['GET', 'POST'],
+        credentials: true
     },
 });
 

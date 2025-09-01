@@ -7,8 +7,11 @@ const createConv = asyncHandler(async (req, res) => {
     if (!receiver) {
         return res.status(400).json({ message: "Receiver phone is required" });
     };
-    await createConversation(senderId, receiver);
-    res.status(201).json({ message: "Created conversation"});
+    const data = await createConversation(senderId, receiver);
+    res.status(201).json({
+        message: "Created conversation",
+        data: { ...data }
+    });
 });
 
 const getAllConvs = asyncHandler(async (req, res) => {
