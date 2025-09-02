@@ -46,6 +46,8 @@ app.set('io', io);
 app.use('/api/v1/users', userRoutes);
 app.use('/api/v1/conversations', conversationRoutes);
 app.use('/api/v1/messages', messageRoutes);
+app.use('/imgs', express.static('C:/Users/20122/Documents/Languges/node js/chat/imgs'));
+
 
 app.all(/.*/, (req, res, next) => {
     const err = new Error(`Can't find this route: ${req.originalUrl}`);
