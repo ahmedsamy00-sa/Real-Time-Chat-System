@@ -27,7 +27,7 @@ const getMessagesByConversationId = async (convId, userId) =>{
         const [ check ] = await db.execute('SELECT * FROM conversations WHERE conversation_id = ? AND (user1_id = ? OR user2_id = ?)', [convId, userId, userId]);
         if(check[0].length === 0) throw new Error('Access Denied');
         
-        const [rows] = await db.execute('SELECT * FROM messages WHERE conversation_id = ? ORDER BY created_at ASC', convId);
+        const [rows] = await db.execute('SELECT * FROM messages WHERE conversation_id = ? ORDER BY created_at ASC', [convId]);
         return rows;
     }catch(err){
         console.error('Error fetching messages:', err);
