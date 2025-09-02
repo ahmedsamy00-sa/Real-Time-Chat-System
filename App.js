@@ -48,18 +48,16 @@ app.use('/api/v1/conversations', conversationRoutes);
 app.use('/api/v1/messages', messageRoutes);
 app.use('/imgs', express.static('C:/Users/20122/Documents/Languges/node js/chat/imgs'));
 
-
+// URL error handler
 app.all(/.*/, (req, res, next) => {
     const err = new Error(`Can't find this route: ${req.originalUrl}`);
-    next(err);
+    next(err.message);
 });
 
-// global error handler
+// global error handling middleware
 app.use((err, req, res, next) => {
     console.error("Global Error:", err);
-    res.status(500).json({
-        message: err.message || "Something went wrong"
-    });
+    res.status(500).json({ err });
 });
 
 // WebSocket Events
