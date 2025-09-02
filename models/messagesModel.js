@@ -7,7 +7,7 @@ const addMessage = async (convId, content, imagePath, sender_Id) =>{
     if(result.affectedRows === 0) throw new Error('Failed to add message');
     return {
         id: result.insertId,
-        conversationId: convId,
+        conversation_Id: convId,
         sender_Id,
         message: content,
         imagePath,
