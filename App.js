@@ -10,6 +10,8 @@ import cors from 'cors';
 import http from 'http';
 import { Server } from 'socket.io';
 import messageSocket from './sockets/messageSockets.js';
+import ApiError from './utils/ApiError.js';
+import globalError from './middlewares/errorMiddleware.js';
 
 
 
@@ -50,15 +52,11 @@ app.use('/imgs', express.static('C:/Users/20122/Documents/Languges/node js/chat/
 
 // URL error handler
 app.all(/.*/, (req, res, next) => {
-    const err = new Error(`Can't find this route: ${req.originalUrl}`);
-    next(err.message);
+    next(new ApiError(`Can't find ${req.originalUrl} on this server!`, 404));
 });
 
 // global error handling middleware
-app.use((err, req, res, next) => {
-    console.error("Global Error:", err);
-    res.status(500).json({ err });
-});
+app.use(globalError);
 
 // WebSocket Events
 messageSocket(io);

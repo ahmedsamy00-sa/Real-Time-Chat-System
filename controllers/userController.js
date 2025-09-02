@@ -2,12 +2,13 @@ import asyncHandler from "express-async-handler";
 import bcrypt from "bcryptjs";
 import { createUser, findUserByEmail, getAllUsers } from "../models/userModel.js";
 import jwt from "jsonwebtoken";
+import ApiError from "../utils/ApiError.js";
 
-const registerOne = asyncHandler(async (req, res) => {
+const registerOne = asyncHandler(async (req, res, next) => {
     const { name, email, password, phone } = req.body;
     const existingUser = await findUserByEmail(email);
     if (existingUser) {
-        return res.status(400).json({ message: "Invalid Email" });
+        return next(new ApiError("Email already in use", 400));
     };
     const hashedPassword = await bcrypt.hash(password, 12);
     const user = await createUser(name, email, hashedPassword, phone);
@@ -25,22 +26,22 @@ const registerOne = asyncHandler(async (req, res) => {
     });
 });
 
-const loginOne = asyncHandler(async (req, res) => {
+const loginOne = asyncHandler(async (req, res, next) => {
     const { email, password } = req.body;
     const user = await findUserByEmail(email);
     if (!user) {
-        return res.status(400).json({ message: "Invalid Email or Password" });
+        return next(new ApiError("Invalid Email or Password", 400));
     };
     const isPasswordValid = await bcrypt.compare(password, user.Password);
     if (!isPasswordValid) {
-        return res.status(400).json({ message: "Invalid Email or Password" });
+        return next(new ApiError("Invalid Email or Password", 400));
     };
     const token = jwt.sign({ id: user.user_id, email: user.Email },process.env.Jwt_secret_key,{ expiresIn: '5h' });
     res.status(200).json({ token, message: "Login successful",
         user: {
             id: user.user_id, 
-            name: user.Name,
-            email: user.Email
+            name: user.name,
+            email: user.email
         }});
 });
 

@@ -1,6 +1,8 @@
 import mySql from 'mysql2/promise';
 import dotenv from 'dotenv';
 import path from 'path';
+import ApiError from '../utils/ApiError.js';
+
 dotenv.config({ path: path.resolve(process.cwd(), 'config.env') });
 
 const db = mySql.createPool({
@@ -20,6 +22,7 @@ const testConnection = async () => {
         conn.release();
     } catch (error) {
         console.error("Database connection failed:", error);
+        process.exit(1);
     }
 };
 

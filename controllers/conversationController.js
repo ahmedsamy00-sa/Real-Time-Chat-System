@@ -1,12 +1,13 @@
 import asyncHandler from "express-async-handler";
 import { createConversation, getAllConversationsForUser } from "../models/conversationModel.js";
+import ApiError from "../utils/ApiError.js";
 
-const createConv = asyncHandler(async (req, res) => {
+const createConv = asyncHandler(async (req, res, next) => {
     const senderId = req.user.id;
     const receiver = req.body.phone;
     if (!receiver) {
-        return res.status(400).json({ message: "Receiver phone is required" });
-    };
+        return next(new ApiError("Receiver phone number is required", 400));
+    }
     const data = await createConversation(senderId, receiver);
     res.status(201).json({
         message: "Created conversation",

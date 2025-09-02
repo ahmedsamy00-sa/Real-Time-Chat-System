@@ -2,12 +2,11 @@ import db from "../config/database.js";
 
 const createConversation = async (user1_id, phone) => {
     const [rows] = await db.execute('SELECT user_id FROM users WHERE phone = ?', [phone]);
-    if (rows.length === 0) throw new Error('User with this phone number not found');
+    if (rows.length === 0) throw new Error('User with this phone number does not exist');
 
     let user2_id = rows[0].user_id;
 
-    try {
-        if (user1_id === user2_id) throw new Error('Cannot create conversation with yourself');
+    if (user1_id === user2_id) throw new Error('Cannot create conversation with yourself');
 
         if (user1_id > user2_id) [user1_id, user2_id] = [user2_id, user1_id];
 
@@ -23,15 +22,10 @@ const createConversation = async (user1_id, phone) => {
             user1_id,
             user2_id
         };
-    } catch (err) {
-        console.error('Error creating conversation:', err);
-        throw err;
-    }
 };
 
 
 const getAllConversationsForUser = async (user_id) => {
-    try {
         const [rows] = await db.execute(
             `SELECT c.conversation_id,
                     CASE
@@ -55,10 +49,6 @@ const getAllConversationsForUser = async (user_id) => {
             [user_id, user_id, user_id]
         );
         return rows;
-    } catch (err) {
-        console.error('Error getting all conversations for user:', err);
-        throw err;
-    }
 };
 
 export { createConversation, getAllConversationsForUser };
