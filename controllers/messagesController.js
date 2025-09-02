@@ -3,7 +3,7 @@ import { addMessage, getMessagesByConversationId } from "../models/messagesModel
 import ApiError from "../utils/ApiError.js";
 
 const sendMessage = asyncHandler(async (req, res, next) => {
-    const senderId = req.user.id;
+    const sender_Id = req.user.id;
     const convId = req.params.id;
     const content = req.body?.content || null;
     const imagePath = req.file?.path || null;
@@ -11,7 +11,7 @@ const sendMessage = asyncHandler(async (req, res, next) => {
     
     if (!content && !req.file) return next(new ApiError('Message content or image is required', 400));   
 
-    const savedMessage = await addMessage(convId, content, imagePath, senderId);
+    const savedMessage = await addMessage(convId, content, imagePath, sender_Id);
 
     io.to(convId).emit('receiveMessage', savedMessage);
 

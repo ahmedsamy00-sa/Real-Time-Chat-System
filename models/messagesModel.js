@@ -1,14 +1,14 @@
 import db from "../config/database.js";
 
-const addMessage = async (convId, content, imagePath, senderId) =>{
+const addMessage = async (convId, content, imagePath, sender_Id) =>{
     const [result] = await db.execute('INSERT INTO messages (conversation_id, message, image, sender_id) VALUES (?, ?, ?, ?)',
-    [convId, content, imagePath, senderId]);
+    [convId, content, imagePath, sender_Id]);
 
     if(result.affectedRows === 0) throw new Error('Failed to add message');
     return {
         id: result.insertId,
         conversationId: convId,
-        senderId,
+        sender_Id,
         message: content,
         imagePath,
         timestamp: new Date()

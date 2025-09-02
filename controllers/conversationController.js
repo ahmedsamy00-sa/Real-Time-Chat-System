@@ -3,12 +3,12 @@ import { createConversation, getAllConversationsForUser } from "../models/conver
 import ApiError from "../utils/ApiError.js";
 
 const createConv = asyncHandler(async (req, res, next) => {
-    const senderId = req.user.id;
+    const sender_Id = req.user.id;
     const receiver = req.body.phone;
     if (!receiver) {
         return next(new ApiError("Receiver phone number is required", 400));
     }
-    const data = await createConversation(senderId, receiver);
+    const data = await createConversation(sender_Id, receiver);
     res.status(201).json({
         message: "Created conversation",
         data: { ...data }
