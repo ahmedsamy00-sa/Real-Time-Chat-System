@@ -13,7 +13,7 @@ const registerOne = asyncHandler(async (req, res, next) => {
     const hashedPassword = await bcrypt.hash(password, 12);
     const user = await createUser(name, email, hashedPassword, phone);
 
-    const token = jwt.sign({ id: user.user_id, email: user.Email },process.env.Jwt_secret_key,{ expiresIn: '5h' });
+    const token = jwt.sign({ user_id: user.user_id, email: user.Email },process.env.Jwt_secret_key,{ expiresIn: '20d' });
     res.status(201).json({
         user: {
             id: user.user_id, 
@@ -35,10 +35,11 @@ const loginOne = asyncHandler(async (req, res, next) => {
     if (!isPasswordValid) {
         return next(new ApiError("Invalid Email or Password", 400));
     };
-    const token = jwt.sign({ id: user.user_id, email: user.Email },process.env.Jwt_secret_key,{ expiresIn: '5h' });
+    const token = jwt.sign({ user_id: user.user_id, email: user.Email },process.env.Jwt_secret_key,{ expiresIn: '20d' });
     
     res.status(200).json({ 
-        token, message: "Login successful",
+        token, 
+        message: "Login successful",
         user: {
             id: user.user_id, 
             name: user.Name,

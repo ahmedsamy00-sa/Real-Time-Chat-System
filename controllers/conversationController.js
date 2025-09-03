@@ -4,7 +4,9 @@ import ApiError from "../utils/ApiError.js";
 
 const createConv = asyncHandler(async (req, res, next) => {
     const sender_id = req.user.user_id;
-    const receiver = req.body?.phone !== undefined && req.body?.phone !== null? String(req.body.phone).trim(): null;
+    console.log(sender_id);
+    const receiver = req.body.phone;
+    console.log(receiver);
     if (!receiver) {
         return next(new ApiError("Receiver phone number is required", 400));
     }
