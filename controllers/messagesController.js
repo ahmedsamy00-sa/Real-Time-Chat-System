@@ -6,7 +6,7 @@ const sendMessage = asyncHandler(async (req, res, next) => {
     const sender_id = req.user.id;
     const convId = req.params.id;
     const content = req.body?.content || null;
-    const imagePath = req.file?.path || null;
+    const imagePath = req.file? `/imgs/${req.file.filename}` || null : null;
     const io = req.app.get('io');
     
     if (!content && !req.file) return next(new ApiError('Message content or image is required', 400));   

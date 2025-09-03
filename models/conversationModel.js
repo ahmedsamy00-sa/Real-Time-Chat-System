@@ -7,9 +7,13 @@ const createConversation = async (user1_id, phone) => {
     let user2_id = rows[0].user_id;
 
     if (user1_id === user2_id) throw new Error('Cannot create conversation with yourself');
-
-        if (user1_id > user2_id) [user1_id, user2_id] = [user2_id, user1_id];
-
+    
+    if (user1_id > user2_id) [user1_id, user2_id] = [user2_id, user1_id];
+    
+    const [existing] = await db.execute('SELECT * FROM conversations WHERE (user1_id = ? AND user2_id = ?) OR (user1_id = ? AND user2_id = ?)',
+        [user1_id, user2_id, user2_id, user1_id]);
+    if (existing.length > 0) throw new Error('Conversation already exists');
+    
         const [result] = await db.execute(
             'INSERT INTO conversations (user1_id, user2_id) VALUES (?, ?)',
             [user1_id, user2_id]

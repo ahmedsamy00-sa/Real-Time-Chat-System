@@ -48,7 +48,7 @@ app.set('io', io);
 app.use('/api/v1/users', userRoutes);
 app.use('/api/v1/conversations', conversationRoutes);
 app.use('/api/v1/messages', messageRoutes);
-app.use('/imgs', express.static('C:/Users/20122/Documents/Languges/node js/chat/imgs'));
+app.use('/imgs', express.static(path.join(__dirname, 'RealTimeChatSystem', 'public', 'imgs')));
 
 // URL error handler
 app.all(/.*/, (req, res, next) => {
