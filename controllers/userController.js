@@ -14,7 +14,6 @@ const registerOne = asyncHandler(async (req, res, next) => {
     const user = await createUser(name, email, hashedPassword, phone);
 
     const token = jwt.sign({ id: user.user_id, email: user.Email },process.env.Jwt_secret_key,{ expiresIn: '5h' });
-
     res.status(201).json({
         user: {
             id: user.user_id, 
@@ -37,7 +36,9 @@ const loginOne = asyncHandler(async (req, res, next) => {
         return next(new ApiError("Invalid Email or Password", 400));
     };
     const token = jwt.sign({ id: user.user_id, email: user.Email },process.env.Jwt_secret_key,{ expiresIn: '5h' });
-    res.status(200).json({ token, message: "Login successful",
+    
+    res.status(200).json({ 
+        token, message: "Login successful",
         user: {
             id: user.user_id, 
             name: user.Name,

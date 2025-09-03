@@ -3,7 +3,7 @@ import { addMessage, getMessagesByConversationId } from "../models/messagesModel
 import ApiError from "../utils/ApiError.js";
 
 const sendMessage = asyncHandler(async (req, res, next) => {
-    const sender_id = req.user.id;
+    const sender_id = req.user.user_id;
     const convId = req.params.id;
     const content = req.body?.content || null;
     const imagePath = req.file? `/imgs/${req.file.filename}` || null : null;
@@ -14,6 +14,12 @@ const sendMessage = asyncHandler(async (req, res, next) => {
     const savedMessage = await addMessage(convId, content, imagePath, sender_id);
 
     io.to(convId).emit('receiveMessage', savedMessage);
+    io.emit("inboxUpdate", {
+        conversation_id: convId,
+        content: content || (req.file ? "[Image]" : ""),
+        created_at: savedMessage.created_at,
+        sender_id,
+    });
 
     res.status(201).json({
         message: "Message sent successfully",
@@ -23,7 +29,7 @@ const sendMessage = asyncHandler(async (req, res, next) => {
 
 const getMessages = asyncHandler(async (req, res, next) => {
     const convId = req.params.id;
-    const userId = req.user.id;
+    const userId = req.user.user_id;
     if(!convId) return next( new ApiError('Conversation ID is required'), 400);
 
     const messages = await getMessagesByConversationId(convId, userId);
