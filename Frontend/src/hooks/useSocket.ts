@@ -6,8 +6,7 @@ const API_URL = "http://localhost:8000";
 
 export const useSocket = (
   conversationId: number | null,
-  onMessage: (msg: any) => void
-) => {
+  onMessage: (msg: any) => void) => {
   const socketRef = useRef<Socket | null>(null);
 
   useEffect(() => {
