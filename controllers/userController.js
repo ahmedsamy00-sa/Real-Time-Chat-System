@@ -40,8 +40,8 @@ const loginOne = asyncHandler(async (req, res, next) => {
     res.status(200).json({ token, message: "Login successful",
         user: {
             id: user.user_id, 
-            name: user.name,
-            email: user.email
+            name: user.Name,
+            email: user.Email
         }});
 });
 
