@@ -9,7 +9,7 @@ import path from 'path';
 import cors from 'cors';
 import http from 'http';
 import { Server } from 'socket.io';
-import messageSocket from './sockets/messageSockets.js';
+import messageSocket from './Sockets/messageSockets.js';
 import ApiError from './utils/ApiError.js';
 import globalError from './middlewares/errorMiddleware.js';
 
