@@ -232,25 +232,13 @@ npm run dev
 
 ---
 
-# 🔹 Future Features
-
-* Push Notifications (browser)
-* Cloud Storage (S3, Cloudinary)
-* Message Search (full-text search)
-* Voice Messages (audio recording & playback)
-* Emoji Reactions
-* Read Receipts
-* Group Chats
-
----
-
 # 🔹 Troubleshooting
 
 ---
 
 # 🔹 Repository Navigation
 
-* [Frontend Source](./RealTimeChatSystem)
+* [Frontend Source](./Frontend)
 * [Backend Source](./)
 
 ---
